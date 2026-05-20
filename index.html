@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>⚡ DeepWork Dashboard</title>
+  <style>
+    :root {
+      --bg:         #0d0d10;
+      --surface:    #16161a;
+      --surface2:   #1e1e24;
+      --surface3:   #26262e;
+      --border:     rgba(255,255,255,0.07);
+      --text:       #e4e4ef;
+      --muted:      #6b6b80;
+      --accent:     #7c3aed;
+      --accent2:    #a855f7;
+      --green:      #22c55e;
+      --amber:      #f59e0b;
+      --blue:       #3b82f6;
+      --red:        #ef4444;
+      --r:          14px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ─── HEADER ─── */
+    header {
+      height: 52px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .logo {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--accent2);
+      white-space: nowrap;
+    }
+    .notion-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .notion-bar::-webkit-scrollbar { display: none; }
+    .notion-chip {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 11px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 12.5px;
+      white-space: nowrap;
+      transition: background .15s, border-color .15s;
+      flex-shrink: 0;
+    }
+    .notion-chip:hover { background: var(--accent); border-color: var(--accent); }
+    .btn-add-notion {
+      padding: 5px 11px;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 12.5px;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: color .15s, border-color .15s;
+    }
+    .btn-add-notion:hover { color: var(--accent2); border-color: var(--accent2); }
+    .focus-toggle {
+      margin-left: auto;
+      padding: 5px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 12.5px;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: all .15s;
+    }
+    .focus-toggle.on {
+      background: rgba(124,58,237,.2);
+      border-color: var(--accent2);
+      color: var(--accent2);
+    }
+
+    /* ─── LAYOUT ─── */
+    .layout {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      height: calc(100vh - 52px);
+    }
+    .left {
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .right { display: flex; flex-direction: column; }
+
+    /* ─── SECTION HEADER ─── */
+    .sec-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ─── POMODORO ─── */
+    .pomo-wrap {
+      padding: 20px 20px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .pomo-modes {
+      display: flex;
+      gap: 4px;
+      background: var(--surface2);
+      border-radius: 10px;
+      padding: 3px;
+    }
+    .mode-btn {
+      flex: 1;
+      padding: 6px 4px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .mode-btn.active { background: var(--accent); color: #fff; }
+    .pomo-center { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+    .ring-wrap { position: relative; width: 180px; height: 180px; }
+    .ring-svg { width: 180px; height: 180px; transform: rotate(-90deg); }
+    .ring-bg { fill: none; stroke: var(--surface3); stroke-width: 9; }
+    .ring-fg { fill: none; stroke-width: 9; stroke-linecap: round; transition: stroke-dashoffset 1s linear, stroke .3s; }
+    .ring-inner {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+    }
+    .ring-time {
+      font-size: 40px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -2px;
+      line-height: 1;
+    }
+    .ring-label { font-size: 11px; color: var(--muted); margin-top: 4px; }
+    .pomo-btns { display: flex; gap: 8px; align-items: center; }
+    .btn-main {
+      padding: 11px 26px;
+      background: var(--accent);
+      border: none;
+      border-radius: 11px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s, transform .1s;
+    }
+    .btn-main:hover { background: var(--accent2); transform: translateY(-1px); }
+    .btn-ico {
+      padding: 11px 14px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      color: var(--muted);
+      font-size: 14px;
+      cursor: pointer;
+      transition: color .15s, border-color .15s;
+    }
+    .btn-ico:hover { color: var(--text); border-color: rgba(255,255,255,.2); }
+    .session-dots { display: flex; gap: 5px; }
+    .sdot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--surface3);
+      border: 1px solid var(--border);
+      transition: background .3s, border-color .3s;
+    }
+    .sdot.done { background: var(--accent2); border-color: var(--accent2); }
+
+    /* ─── TODO ─── */
+    .todo-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 14px 16px;
+      overflow: hidden;
+    }
+    .todo-top { display: flex; align-items: center; justify-content: space-between; }
+    .tag-row { display: flex; gap: 4px; }
+    .tag-filter {
+      padding: 3px 9px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: transparent;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .tag-filter[data-tag="deep"]:hover,   .tag-filter[data-tag="deep"].on   { color: var(--accent2); background: rgba(124,58,237,.15); border-color: var(--accent2); }
+    .tag-filter[data-tag="shallow"]:hover,.tag-filter[data-tag="shallow"].on { color: var(--amber);   background: rgba(245,158,11,.15); border-color: var(--amber); }
+    .tag-filter[data-tag="wait"]:hover,   .tag-filter[data-tag="wait"].on    { color: #9ca3af;        background: rgba(107,114,128,.15); border-color: #9ca3af; }
+    .add-row { display: flex; gap: 6px; }
+    .todo-in {
+      flex: 1;
+      padding: 9px 12px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 13.5px;
+      outline: none;
+      transition: border-color .15s;
+    }
+    .todo-in:focus { border-color: var(--accent2); }
+    .todo-in::placeholder { color: var(--muted); }
+    .btn-plus {
+      padding: 9px 14px;
+      background: var(--accent);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .btn-plus:hover { background: var(--accent2); }
+    .todo-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      padding-right: 2px;
+    }
+    .todo-list::-webkit-scrollbar { width: 4px; }
+    .todo-list::-webkit-scrollbar-track { background: transparent; }
+    .todo-list::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 2px; }
+    .todo-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 9px 11px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      transition: border-color .15s;
+      animation: fadeIn .2s ease;
+    }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:none; } }
+    .todo-item:hover { border-color: rgba(255,255,255,.14); }
+    .todo-item.done .todo-txt { text-decoration: line-through; color: var(--muted); }
+    .chk {
+      width: 17px; height: 17px;
+      border: 2px solid var(--muted);
+      border-radius: 5px;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .15s;
+    }
+    .chk.on { background: var(--green); border-color: var(--green); }
+    .chk.on::after { content: '✓'; color: #fff; font-size: 10px; font-weight: 700; }
+    .todo-txt { flex: 1; font-size: 13.5px; line-height: 1.4; }
+    .todo-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 5px;
+      flex-shrink: 0;
+    }
+    .b-deep    { background: rgba(124,58,237,.2); color: var(--accent2); }
+    .b-shallow { background: rgba(245,158,11,.2);  color: var(--amber); }
+    .b-wait    { background: rgba(107,114,128,.2); color: #9ca3af; }
+    .del-btn {
+      background: none; border: none;
+      color: var(--muted);
+      font-size: 13px;
+      cursor: pointer;
+      opacity: 0;
+      padding: 2px 4px;
+      transition: opacity .15s, color .15s;
+      flex-shrink: 0;
+    }
+    .todo-item:hover .del-btn { opacity: 1; }
+    .del-btn:hover { color: var(--red); }
+
+    /* ─── CALENDAR ─── */
+    .cal-header {
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .btn-sm {
+      padding: 5px 12px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      cursor: pointer;
+      transition: color .15s, border-color .15s;
+    }
+    .btn-sm:hover { color: var(--text); border-color: rgba(255,255,255,.2); }
+    .cal-body { flex: 1; display: flex; flex-direction: column; }
+    .cal-frame { flex: 1; border: none; background: transparent; }
+    .cal-setup {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 18px;
+      padding: 40px 32px;
+      text-align: center;
+    }
+    .cal-icon { font-size: 44px; }
+    .cal-setup h2 { font-size: 20px; font-weight: 600; }
+    .cal-setup p { color: var(--muted); font-size: 13.5px; line-height: 1.7; max-width: 380px; }
+    .steps-box {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 20px;
+      text-align: left;
+      max-width: 420px;
+      width: 100%;
+    }
+    .steps-box ol { padding-left: 18px; color: var(--muted); font-size: 13px; line-height: 2.1; }
+    .steps-box strong { color: var(--text); }
+    .btn-primary {
+      padding: 11px 24px;
+      background: var(--accent);
+      border: none;
+      border-radius: 11px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s, transform .1s;
+    }
+    .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
+
+    /* ─── MODALS ─── */
+    .overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.65);
+      backdrop-filter: blur(6px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 50;
+    }
+    .overlay.hide { display: none; }
+    .modal {
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 18px;
+      padding: 24px;
+      width: 90%;
+      max-width: 420px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 24px 60px rgba(0,0,0,.5);
+    }
+    .modal h3 { font-size: 17px; font-weight: 600; }
+    .m-in {
+      padding: 11px 14px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 13.5px;
+      outline: none;
+      width: 100%;
+      transition: border-color .15s;
+    }
+    .m-in:focus { border-color: var(--accent2); }
+    .m-in::placeholder { color: var(--muted); }
+    .m-actions { display: flex; gap: 8px; justify-content: flex-end; }
+    .btn-cancel {
+      padding: 9px 18px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      color: var(--muted);
+      font-size: 13.5px;
+      cursor: pointer;
+      transition: color .15s;
+    }
+    .btn-cancel:hover { color: var(--text); }
+    .m-hint { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+    /* ─── TOAST ─── */
+    .toast {
+      position: fixed;
+      bottom: 20px; right: 20px;
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 12px;
+      padding: 13px 18px;
+      font-size: 13.5px;
+      z-index: 200;
+      box-shadow: 0 8px 30px rgba(0,0,0,.4);
+      transform: translateY(12px);
+      opacity: 0;
+      transition: all .25s ease;
+      pointer-events: none;
+    }
+    .toast.show { transform: none; opacity: 1; }
+
+    /* ─── FOCUS MODE ─── */
+    body.focus .todo-wrap   { opacity: .25; pointer-events: none; transition: opacity .3s; }
+    body.focus .cal-body    { opacity: .25; pointer-events: none; transition: opacity .3s; }
+    body.focus .notion-bar  { opacity: .25; pointer-events: none; transition: opacity .3s; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 700px) {
+      .layout { grid-template-columns: 1fr; height: auto; }
+      .left { border-right: none; border-bottom: 1px solid var(--border); overflow: visible; }
+      .todo-list { max-height: 260px; }
+      .right { height: 480px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════ HEADER ══════════════ -->
+<header>
+  <span class="logo">⚡ DeepWork</span>
+  <div class="notion-bar" id="notionBar"></div>
+  <button class="btn-add-notion" onclick="openModal('notionModal')">+ Notion</button>
+  <button class="focus-toggle" id="focusBtn" onclick="toggleFocus()">🎯 Focus</button>
+</header>
+
+<!-- ══════════════ LAYOUT ══════════════ -->
+<div class="layout">
+
+  <!-- ── LEFT ── -->
+  <div class="left">
+
+    <!-- POMODORO -->
+    <div class="pomo-wrap">
+      <div class="sec-label">Pomodoro</div>
+      <div class="pomo-modes">
+        <button class="mode-btn active" data-mode="work"  onclick="switchMode('work',this)">Focus 25'</button>
+        <button class="mode-btn"        data-mode="short" onclick="switchMode('short',this)">Pause 5'</button>
+        <button class="mode-btn"        data-mode="long"  onclick="switchMode('long',this)">Pause 15'</button>
+      </div>
+      <div class="pomo-center">
+        <div class="ring-wrap">
+          <svg class="ring-svg" viewBox="0 0 180 180">
+            <circle class="ring-bg" cx="90" cy="90" r="78"/>
+            <circle class="ring-fg" id="ringFg" cx="90" cy="90" r="78"/>
+          </svg>
+          <div class="ring-inner">
+            <span class="ring-time" id="ringTime">25:00</span>
+            <span class="ring-label" id="ringLabel">Prêt</span>
+          </div>
+        </div>
+        <div class="pomo-btns">
+          <button class="btn-ico" onclick="resetTimer()" title="Reset (R)">↺</button>
+          <button class="btn-main" id="startBtn" onclick="toggleTimer()">▶ Démarrer</button>
+          <button class="btn-ico" onclick="openModal('settingsModal')" title="Durées">⚙</button>
+        </div>
+        <div class="session-dots" id="sessionDots"></div>
+      </div>
+    </div>
+
+    <!-- TODO -->
+    <div class="todo-wrap">
+      <div class="todo-top">
+        <span class="sec-label">Tâches</span>
+        <div class="tag-row">
+          <button class="tag-filter" data-tag="deep"    onclick="toggleTag('deep',this)">Deep</button>
+          <button class="tag-filter" data-tag="shallow" onclick="toggleTag('shallow',this)">Shallow</button>
+          <button class="tag-filter" data-tag="wait"    onclick="toggleTag('wait',this)">Attente</button>
+        </div>
+      </div>
+      <div class="add-row">
+        <input class="todo-in" id="todoIn" placeholder="Nouvelle tâche…"
+               onkeydown="if(event.key==='Enter')addTodo()">
+        <button class="btn-plus" onclick="addTodo()">+</button>
+      </div>
+      <div class="todo-list" id="todoList"></div>
+    </div>
+
+  </div><!-- /left -->
+
+  <!-- ── RIGHT ── -->
+  <div class="right">
+    <div class="cal-header">
+      <span class="sec-label">Google Calendar</span>
+      <button class="btn-sm" onclick="openModal('calModal')">⚙ Configurer</button>
+    </div>
+    <div class="cal-body" id="calBody"></div>
+  </div>
+
+</div><!-- /layout -->
+
+<!-- ══════════════ MODALS ══════════════ -->
+
+<!-- Notion -->
+<div class="overlay hide" id="notionModal">
+  <div class="modal">
+    <h3>📄 Ajouter un lien Notion</h3>
+    <input class="m-in" id="nName" placeholder="Nom  (ex: 📓 Journal)" />
+    <input class="m-in" id="nUrl"  placeholder="URL Notion" />
+    <p class="m-hint">Clic droit sur la puce → supprimer</p>
+    <div class="m-actions">
+      <button class="btn-cancel" onclick="closeModal('notionModal')">Annuler</button>
+      <button class="btn-primary" onclick="addNotionLink()">Ajouter</button>
+    </div>
+  </div>
+</div>
+
+<!-- Calendar -->
+<div class="overlay hide" id="calModal">
+  <div class="modal">
+    <h3>📅 Google Calendar</h3>
+    <div class="steps-box">
+      <ol>
+        <li>Va sur <strong>calendar.google.com</strong></li>
+        <li>⚙ Paramètres → clique sur <strong>ton calendrier</strong></li>
+        <li>Section <strong>"Intégrer le calendrier"</strong></li>
+        <li>Copie l'<strong>URL publique de l'iframe</strong></li>
+        <li>Colle-la ci-dessous</li>
+      </ol>
+    </div>
+    <input class="m-in" id="calUrl" placeholder="https://calendar.google.com/calendar/embed?src=…" />
+    <div class="m-actions">
+      <button class="btn-cancel" onclick="closeModal('calModal')">Annuler</button>
+      <button class="btn-primary" onclick="saveCalendar()">Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<!-- Settings (Pomodoro durations) -->
+<div class="overlay hide" id="settingsModal">
+  <div class="modal">
+    <h3>⚙ Durées (minutes)</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+      <div>
+        <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px">Focus</label>
+        <input class="m-in" id="durWork"  type="number" min="1" max="90" value="25">
+      </div>
+      <div>
+        <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px">Courte</label>
+        <input class="m-in" id="durShort" type="number" min="1" max="30" value="5">
+      </div>
+      <div>
+        <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px">Longue</label>
+        <input class="m-in" id="durLong"  type="number" min="1" max="60" value="15">
+      </div>
+    </div>
+    <div class="m-actions">
+      <button class="btn-cancel" onclick="closeModal('settingsModal')">Annuler</button>
+      <button class="btn-primary" onclick="saveSettings()">Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ════════════════════════════════════
+   POMODORO
+════════════════════════════════════ */
+const C  = 2 * Math.PI * 78; // circumference
+let MODES = { work:25*60, short:5*60, long:15*60 };
+const MODE_COLORS = { work:'#a855f7', short:'#22c55e', long:'#3b82f6' };
+const MODE_LABELS = { work:'Focus', short:'Pause courte', long:'Pause longue' };
+
+let mode     = 'work';
+let total    = MODES.work;
+let left     = MODES.work;
+let running  = false;
+let ticker   = null;
+let sessions = 0;
+
+const ringFg   = document.getElementById('ringFg');
+const ringTime = document.getElementById('ringTime');
+const ringLbl  = document.getElementById('ringLabel');
+const startBtn = document.getElementById('startBtn');
+
+ringFg.style.strokeDasharray  = C;
+ringFg.style.strokeDashoffset = 0;
+
+function fmt(s) {
+  return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+}
+
+function paintTimer() {
+  ringTime.textContent = fmt(left);
+  const pct = total > 0 ? left/total : 0;
+  ringFg.style.strokeDashoffset = C * pct;
+  ringFg.style.stroke = MODE_COLORS[mode];
+}
+
+function switchMode(m, btn) {
+  if (running) return;
+  mode  = m;
+  total = MODES[m];
+  left  = MODES[m];
+  ringLbl.textContent = MODE_LABELS[m];
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  startBtn.textContent = '▶ Démarrer';
+  paintTimer();
+}
+
+function toggleTimer() {
+  if (running) {
+    clearInterval(ticker);
+    running = false;
+    startBtn.textContent = '▶ Reprendre';
+    ringLbl.textContent  = 'En pause';
+  } else {
+    running = true;
+    startBtn.textContent = '⏸ Pause';
+    ringLbl.textContent  = MODE_LABELS[mode];
+    ticker = setInterval(() => {
+      if (left <= 0) { endTimer(); return; }
+      left--;
+      paintTimer();
+    }, 1000);
+  }
+}
+
+function resetTimer() {
+  clearInterval(ticker);
+  running = false;
+  left    = MODES[mode];
+  total   = MODES[mode];
+  startBtn.textContent = '▶ Démarrer';
+  ringLbl.textContent  = 'Prêt';
+  paintTimer();
+}
+
+function endTimer() {
+  clearInterval(ticker);
+  running = false;
+  startBtn.textContent = '▶ Démarrer';
+  beep();
+  notify();
+  if (mode === 'work') {
+    sessions++;
+    renderDots();
+    const msg = sessions % 4 === 0
+      ? `🎉 4 sessions ! Prends une longue pause.`
+      : `✅ Session ${sessions} terminée ! Pause méritée.`;
+    toast(msg);
+    const next = sessions % 4 === 0 ? 'long' : 'short';
+    setTimeout(() => autoSwitch(next), 800);
+  } else {
+    toast('💪 Pause terminée ! Retour au focus.');
+    setTimeout(() => autoSwitch('work'), 800);
+  }
+}
+
+function autoSwitch(m) {
+  mode  = m;
+  total = MODES[m];
+  left  = MODES[m];
+  ringLbl.textContent = MODE_LABELS[m];
+  document.querySelectorAll('.mode-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.mode === m));
+  paintTimer();
+}
+
+function renderDots() {
+  const wrap = document.getElementById('sessionDots');
+  wrap.innerHTML = '';
+  const filled = sessions % 4 || (sessions > 0 && sessions % 4 === 0 ? 4 : 0);
+  for (let i = 0; i < 4; i++) {
+    const d = document.createElement('div');
+    d.className = 'sdot' + (i < filled ? ' done' : '');
+    wrap.appendChild(d);
+  }
+}
+
+function beep() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [0, 0.18, 0.36].forEach(delay => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.value = 880;
+      gain.gain.setValueAtTime(0, ctx.currentTime + delay);
+      gain.gain.linearRampToValueAtTime(0.45, ctx.currentTime + delay + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + 0.6);
+      osc.start(ctx.currentTime + delay);
+      osc.stop(ctx.currentTime + delay + 0.6);
+    });
+  } catch(_) {}
+}
+
+function notify() {
+  if (Notification.permission === 'granted') {
+    const body = mode === 'work' ? 'Session terminée ! Prends une pause.' : 'Pause terminée !';
+    new Notification('⚡ DeepWork', { body });
+  }
+}
+
+function saveSettings() {
+  const w = parseInt(document.getElementById('durWork').value)  || 25;
+  const s = parseInt(document.getElementById('durShort').value) || 5;
+  const l = parseInt(document.getElementById('durLong').value)  || 15;
+  MODES = { work: w*60, short: s*60, long: l*60 };
+  localStorage.setItem('dw_modes', JSON.stringify(MODES));
+  if (!running) resetTimer();
+  closeModal('settingsModal');
+  toast('⏱ Durées mises à jour !');
+}
+
+// ── init settings
+const savedModes = localStorage.getItem('dw_modes');
+if (savedModes) {
+  try {
+    MODES = JSON.parse(savedModes);
+    document.getElementById('durWork').value  = MODES.work/60;
+    document.getElementById('durShort').value = MODES.short/60;
+    document.getElementById('durLong').value  = MODES.long/60;
+  } catch(_) {}
+}
+total = MODES.work; left = MODES.work;
+
+// ── request notification permission
+Notification.requestPermission?.();
+
+paintTimer();
+renderDots();
+
+/* ════════════════════════════════════
+   TODO
+════════════════════════════════════ */
+let todos  = JSON.parse(localStorage.getItem('dw_todos') || '[]');
+let selTag = null;
+
+function saveTodos() { localStorage.setItem('dw_todos', JSON.stringify(todos)); }
+
+function toggleTag(tag, btn) {
+  selTag = selTag === tag ? null : tag;
+  document.querySelectorAll('.tag-filter').forEach(b => b.classList.remove('on'));
+  if (selTag) btn.classList.add('on');
+}
+
+function addTodo() {
+  const el   = document.getElementById('todoIn');
+  const text = el.value.trim();
+  if (!text) return;
+  todos.unshift({ id: Date.now(), text, done: false, tag: selTag });
+  saveTodos();
+  renderTodos();
+  el.value = '';
+  el.focus();
+}
+
+function toggleDone(id) {
+  todos = todos.map(t => t.id === id ? {...t, done: !t.done} : t);
+  saveTodos();
+  renderTodos();
+}
+
+function removeTodo(id) {
+  todos = todos.filter(t => t.id !== id);
+  saveTodos();
+  renderTodos();
+}
+
+const TAG_LABELS = { deep:'Deep Work', shallow:'Shallow', wait:'En attente' };
+const TAG_CLASS  = { deep:'b-deep', shallow:'b-shallow', wait:'b-wait' };
+
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function renderTodos() {
+  const list = document.getElementById('todoList');
+  const sorted = [...todos].sort((a,b) => a.done - b.done);
+  list.innerHTML = '';
+  if (sorted.length === 0) {
+    list.innerHTML = `<div style="color:var(--muted);font-size:13px;text-align:center;margin-top:24px">Aucune tâche. Lance-toi ! 🚀</div>`;
+    return;
+  }
+  sorted.forEach(t => {
+    const div = document.createElement('div');
+    div.className = 'todo-item' + (t.done ? ' done' : '');
+    div.innerHTML = `
+      <div class="chk ${t.done?'on':''}" onclick="toggleDone(${t.id})"></div>
+      <span class="todo-txt">${esc(t.text)}</span>
+      ${t.tag ? `<span class="todo-badge ${TAG_CLASS[t.tag]}">${TAG_LABELS[t.tag]}</span>` : ''}
+      <button class="del-btn" onclick="removeTodo(${t.id})" title="Supprimer">✕</button>
+    `;
+    list.appendChild(div);
+  });
+}
+
+renderTodos();
+
+/* ════════════════════════════════════
+   NOTION LINKS
+════════════════════════════════════ */
+let notionLinks = JSON.parse(localStorage.getItem('dw_notion') || '[]');
+
+function saveNotion() { localStorage.setItem('dw_notion', JSON.stringify(notionLinks)); }
+
+function addNotionLink() {
+  const name = document.getElementById('nName').value.trim();
+  const url  = document.getElementById('nUrl').value.trim();
+  if (!name || !url) { toast('❌ Remplis les deux champs !'); return; }
+  notionLinks.push({ name, url });
+  saveNotion();
+  renderNotion();
+  closeModal('notionModal');
+}
+
+function renderNotion() {
+  const bar = document.getElementById('notionBar');
+  bar.innerHTML = '';
+  notionLinks.forEach((lk, i) => {
+    const a = document.createElement('a');
+    a.className = 'notion-chip';
+    a.href = lk.url;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.textContent = lk.name;
+    a.addEventListener('contextmenu', e => {
+      e.preventDefault();
+      if (confirm(`Supprimer "${lk.name}" ?`)) {
+        notionLinks.splice(i, 1);
+        saveNotion();
+        renderNotion();
+      }
+    });
+    bar.appendChild(a);
+  });
+}
+
+renderNotion();
+
+/* ════════════════════════════════════
+   CALENDAR
+════════════════════════════════════ */
+function saveCalendar() {
+  const url = document.getElementById('calUrl').value.trim();
+  if (!url) { toast('❌ Colle l\'URL Google Calendar !'); return; }
+  localStorage.setItem('dw_cal', url);
+  renderCalendar();
+  closeModal('calModal');
+  toast('📅 Calendrier connecté !');
+}
+
+function renderCalendar() {
+  const body = document.getElementById('calBody');
+  const url  = localStorage.getItem('dw_cal');
+  if (url) {
+    // Append dark-ish style params if missing
+    let src = url;
+    if (!src.includes('bgcolor=')) {
+      const sep = src.includes('?') ? '&' : '?';
+      src += sep + 'bgcolor=%23161616&showTitle=0&showNav=1&showDate=1&showPrint=0&showCalendars=0&mode=WEEK';
+    }
+    body.innerHTML = `<iframe class="cal-frame" src="${src}" frameborder="0" scrolling="no"></iframe>`;
+  } else {
+    body.innerHTML = `
+      <div class="cal-setup">
+        <div class="cal-icon">📅</div>
+        <h2>Connecter Google Calendar</h2>
+        <p>Intègre ton vrai calendrier Google pour voir tes événements directement ici, sans quitter l'app.</p>
+        <div class="steps-box">
+          <ol>
+            <li>Va sur <strong>calendar.google.com</strong></li>
+            <li>⚙ Paramètres → clique sur <strong>ton calendrier</strong></li>
+            <li>Section <strong>"Intégrer le calendrier"</strong></li>
+            <li>Copie l'<strong>URL publique de l'iframe</strong></li>
+          </ol>
+        </div>
+        <button class="btn-primary" onclick="openModal('calModal')">📋 Coller l'URL</button>
+      </div>`;
+  }
+}
+
+// Prepopulate calendar URL input when opening modal
+document.getElementById('calModal').addEventListener('click', () => {
+  const saved = localStorage.getItem('dw_cal') || '';
+  document.getElementById('calUrl').value = saved;
+});
+
+renderCalendar();
+
+/* ════════════════════════════════════
+   FOCUS MODE
+════════════════════════════════════ */
+function toggleFocus() {
+  document.body.classList.toggle('focus');
+  const on = document.body.classList.contains('focus');
+  const btn = document.getElementById('focusBtn');
+  btn.textContent = on ? '🎯 Focus ON' : '🎯 Focus';
+  btn.classList.toggle('on', on);
+  if (on) toast('🎯 Mode Focus activé — seul le timer est visible.');
+}
+
+/* ════════════════════════════════════
+   MODALS
+════════════════════════════════════ */
+function openModal(id) {
+  document.getElementById(id).classList.remove('hide');
+  // Auto-focus first input
+  const inp = document.querySelector(`#${id} input`);
+  if (inp) setTimeout(() => inp.focus(), 60);
+}
+function closeModal(id) {
+  document.getElementById(id).classList.add('hide');
+}
+
+// Close on backdrop click
+document.querySelectorAll('.overlay').forEach(ov => {
+  ov.addEventListener('click', e => { if (e.target === ov) closeModal(ov.id); });
+});
+
+// Enter key in modals
+document.getElementById('nUrl').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addNotionLink();
+});
+document.getElementById('calUrl').addEventListener('keydown', e => {
+  if (e.key === 'Enter') saveCalendar();
+});
+
+/* ════════════════════════════════════
+   KEYBOARD SHORTCUTS
+════════════════════════════════════ */
+document.addEventListener('keydown', e => {
+  if (['INPUT','TEXTAREA'].includes(e.target.tagName)) return;
+  if (e.code === 'Space')  { e.preventDefault(); toggleTimer(); }
+  if (e.code === 'KeyR')   resetTimer();
+  if (e.code === 'KeyF')   toggleFocus();
+});
+
+/* ════════════════════════════════════
+   TOAST
+════════════════════════════════════ */
+let toastT;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => el.classList.remove('show'), 4000);
+}
+</script>
+</body>
+</html>
