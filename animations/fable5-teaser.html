@@ -38,13 +38,14 @@
     transform:translate(-50%,-50%) scale(.7);
     opacity:0;
   }
-  .stage.play .clock-wrap{ animation: introIn .6s ease-out forwards; }
+  .stage.play .clock-wrap{
+    animation: introIn .6s ease-out forwards,
+               fadeOutClock .35s ease-in 3.2s forwards;
+  }
 
   .clock-face{ width:100%; height:100%; }
   .clock-ring{ fill:none; stroke:var(--orange); stroke-width:3; opacity:.55; }
   .clock-tick{ fill:var(--orange-lite); opacity:.8; }
-
-  .stage.play .clock-fade{ animation: fadeOutClock .35s ease-in 3.2s forwards; }
 
   .logo-pivot{ transform-origin:150px 150px; }
   .stage.play .logo-pivot{
@@ -167,7 +168,7 @@
 <div class="stage" id="stage">
 
   <!-- CLOCK + SPINNING LOGO -->
-  <div class="clock-wrap clock-fade">
+  <div class="clock-wrap">
     <svg class="clock-face" viewBox="0 0 300 300">
       <circle class="clock-ring" cx="150" cy="150" r="120"/>
       <g class="ticks"></g>
