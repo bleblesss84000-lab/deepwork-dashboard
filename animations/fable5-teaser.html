@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fable 5 — Teaser J-1</title>
+<style>
+  :root{
+    --orange:      #E8734A;
+    --orange-dark: #C2410C;
+    --orange-lite: #FFA36C;
+    --cream:       #FDF6EC;
+    --bg:          #14100d;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;background:#000;}
+  body{
+    display:flex;align-items:center;justify-content:center;
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+    overflow:hidden;
+  }
+
+  .stage{
+    position:relative;
+    width:min(100vw, 56.25vh);
+    height:min(177.78vw, 100vh);
+    background:
+      radial-gradient(ellipse at 50% 38%, rgba(232,115,74,.20), transparent 60%),
+      radial-gradient(ellipse at 50% 100%, rgba(194,65,12,.18), transparent 55%),
+      var(--bg);
+    overflow:hidden;
+  }
+
+  /* ── CLOCK ── */
+  .clock-wrap{
+    position:absolute; top:38%; left:50%;
+    width:56vmin; height:56vmin;
+    transform:translate(-50%,-50%) scale(.7);
+    opacity:0;
+  }
+  .stage.play .clock-wrap{ animation: introIn .6s ease-out forwards; }
+
+  .clock-face{ width:100%; height:100%; }
+  .clock-ring{ fill:none; stroke:var(--orange); stroke-width:3; opacity:.55; }
+  .clock-tick{ fill:var(--orange-lite); opacity:.8; }
+
+  .stage.play .clock-fade{ animation: fadeOutClock .35s ease-in 3.2s forwards; }
+
+  .logo-pivot{ transform-origin:150px 150px; }
+  .stage.play .logo-pivot{
+    animation: spin 2.6s cubic-bezier(.55,0,1,.45) .6s 1 forwards;
+  }
+  @keyframes spin{
+    0%   { transform:rotate(0deg); }
+    55%  { transform:rotate(560deg); }
+    100% { transform:rotate(1520deg); }
+  }
+  @keyframes introIn{
+    to{ opacity:1; transform:translate(-50%,-50%) scale(1); }
+  }
+  @keyframes fadeOutClock{
+    to{ opacity:0; transform:scale(1.15); }
+  }
+
+  .claude-logo .petal{ fill:var(--orange); }
+  .claude-logo .petal:nth-child(odd){ fill:var(--orange-lite); }
+
+  /* ── FLASH ── */
+  .flash{
+    position:absolute; top:38%; left:50%;
+    width:10vmin; height:10vmin; border-radius:50%;
+    transform:translate(-50%,-50%) scale(0);
+    background:radial-gradient(circle, #fff 0%, var(--orange-lite) 35%, rgba(232,115,74,0) 70%);
+    opacity:0;
+    pointer-events:none;
+  }
+  .stage.play .flash{ animation: flashPulse .55s ease-out 3.15s forwards; }
+  @keyframes flashPulse{
+    0%   { opacity:0;  transform:translate(-50%,-50%) scale(0); }
+    35%  { opacity:1;  transform:translate(-50%,-50%) scale(7); }
+    100% { opacity:0;  transform:translate(-50%,-50%) scale(11); }
+  }
+
+  /* ── PARTICLES (exploded logo copies) ── */
+  .particles{
+    position:absolute; top:38%; left:50%; width:0; height:0;
+  }
+  .particle{
+    position:absolute; top:0; left:0;
+    width:11vmin; height:11vmin;
+    margin:-5.5vmin;
+    opacity:0;
+    --a:0deg; --d:38vmin;
+  }
+  .stage.play .particle{
+    animation: burstOut .9s cubic-bezier(.2,.8,.2,1) 3.22s forwards;
+  }
+  @keyframes burstOut{
+    0%   { opacity:1; transform:rotate(var(--a)) translate(0)      rotate(calc(var(--a) * -1)) scale(1); }
+    100% { opacity:0; transform:rotate(var(--a)) translate(var(--d)) rotate(calc(var(--a) * -1) ) scale(.4) rotate(260deg); }
+  }
+  .particle svg{ width:100%; height:100%; }
+  .particle .petal{ fill:var(--orange); }
+
+  /* ── REVEAL ── */
+  .reveal{
+    position:absolute; top:0; left:0; width:100%; height:100%;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:18px;
+    opacity:0; transform:scale(.85);
+  }
+  .stage.play .reveal{
+    animation: revealIn .75s cubic-bezier(.2,.85,.3,1.15) 3.85s forwards;
+  }
+  @keyframes revealIn{
+    to{ opacity:1; transform:scale(1); }
+  }
+  .eyebrow{
+    font-size:2.2vmin; font-weight:700; letter-spacing:.35em;
+    text-transform:uppercase; color:var(--orange-lite);
+  }
+  .title{
+    font-size:9.5vmin; font-weight:800; color:var(--cream);
+    letter-spacing:-.01em; line-height:1;
+    display:flex; align-items:baseline; gap:.15em;
+  }
+  .title .five{
+    color:var(--orange);
+    -webkit-text-stroke: .5px var(--orange-dark);
+  }
+  .subtitle{
+    font-size:2.6vmin; color:rgba(253,246,236,.7); font-weight:500;
+  }
+
+  .badge{
+    margin-top:10px;
+    padding:1.2vmin 3.2vmin;
+    border-radius:100px;
+    background:linear-gradient(135deg,var(--orange),var(--orange-dark));
+    color:#fff; font-weight:800; font-size:3.4vmin; letter-spacing:.04em;
+    box-shadow:0 0 0 0 rgba(232,115,74,.6);
+    opacity:0;
+  }
+  .stage.play .badge{
+    animation: badgeIn .5s ease-out 4.35s forwards, badgePulse 1.7s ease-in-out 4.85s infinite;
+  }
+  @keyframes badgeIn{ to{ opacity:1; } }
+  @keyframes badgePulse{
+    0%,100%{ box-shadow:0 0 0 0 rgba(232,115,74,.55); transform:scale(1); }
+    50%    { box-shadow:0 0 0 14px rgba(232,115,74,0); transform:scale(1.05); }
+  }
+
+  /* ── REPLAY ── */
+  .replay{
+    position:absolute; bottom:4vmin; left:50%; transform:translateX(-50%);
+    padding:1.4vmin 3vmin; border-radius:100px;
+    background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.18);
+    color:var(--cream); font-size:2vmin; font-weight:600; letter-spacing:.03em;
+    cursor:pointer; backdrop-filter:blur(6px);
+    z-index:10;
+  }
+  .replay:hover{ background:rgba(255,255,255,.16); }
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+
+  <!-- CLOCK + SPINNING LOGO -->
+  <div class="clock-wrap clock-fade">
+    <svg class="clock-face" viewBox="0 0 300 300">
+      <circle class="clock-ring" cx="150" cy="150" r="120"/>
+      <g class="ticks"></g>
+      <g class="logo-pivot">
+        <g class="claude-logo" transform="translate(150,150) scale(1.05)" id="centerLogo"></g>
+      </g>
+    </svg>
+  </div>
+
+  <!-- FLASH -->
+  <div class="flash"></div>
+
+  <!-- EXPLOSION PARTICLES -->
+  <div class="particles" id="particles"></div>
+
+  <!-- REVEAL -->
+  <div class="reveal">
+    <div class="eyebrow">Anthropic présente</div>
+    <div class="title">Fable <span class="five">5</span></div>
+    <div class="subtitle">Le nouveau modèle arrive</div>
+    <div class="badge">J-1</div>
+  </div>
+
+  <button class="replay" onclick="replay()">↺ Rejouer</button>
+</div>
+
+<script>
+// Build one Claude-style 7-petal sunburst logo as an SVG <g>, reused for the
+// center logo and every explosion particle so they all match visually.
+function petalMarkup(){
+  const n = 7, r1 = 10, len = 46, gap = 14;
+  let out = '';
+  for(let i=0;i<n;i++){
+    const angle = (360/n)*i;
+    out += `<rect class="petal" x="${-r1}" y="${-len-gap}" width="${r1*2}" height="${len}" rx="${r1}" transform="rotate(${angle})"/>`;
+  }
+  return out;
+}
+
+document.getElementById('centerLogo').innerHTML = petalMarkup();
+
+// 8-way explosion: clone the logo at 45° increments around the clock center.
+const particlesWrap = document.getElementById('particles');
+const COUNT = 8;
+for(let i=0;i<COUNT;i++){
+  const angle = (360/COUNT)*i;
+  const div = document.createElement('div');
+  div.className = 'particle';
+  div.style.setProperty('--a', angle+'deg');
+  div.style.setProperty('--d', (34+Math.random()*10)+'vmin');
+  div.innerHTML = `<svg viewBox="0 0 300 300"><g transform="translate(150,150) scale(.9) rotate(${Math.random()*40-20})">${petalMarkup()}</g></svg>`;
+  particlesWrap.appendChild(div);
+}
+
+// Clock tick marks (12, like hour markers).
+const ticks = document.querySelector('.ticks');
+for(let i=0;i<12;i++){
+  const a = (360/12)*i;
+  const rad = a * Math.PI/180;
+  const r1 = 108, r2 = i%3===0 ? 96 : 102;
+  const x1 = 150 + r1*Math.sin(rad), y1 = 150 - r1*Math.cos(rad);
+  const x2 = 150 + r2*Math.sin(rad), y2 = 150 - r2*Math.cos(rad);
+  ticks.innerHTML += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#FFA36C" stroke-width="${i%3===0?4:2}" stroke-linecap="round" opacity=".8"/>`;
+}
+
+const stage = document.getElementById('stage');
+function replay(){
+  stage.classList.remove('play');
+  void stage.offsetWidth; // force reflow so CSS animations restart
+  stage.classList.add('play');
+}
+replay();
+</script>
+
+</body>
+</html>
