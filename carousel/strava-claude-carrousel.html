@@ -71,19 +71,8 @@ body { background:#3a3833; display:flex; flex-direction:column; align-items:cent
 }
 
 /* ---------- shared chrome ---------- */
-.frame { position:absolute; inset:0; padding:150px 88px 130px; display:flex; flex-direction:column; }
-.s2 .frame, .s3 .frame, .s5 .frame, .s8 .frame { justify-content:center; }
-.topbar { position:absolute; top:64px; left:88px; right:88px; display:flex; align-items:center; justify-content:space-between; }
-.brandchip { display:flex; align-items:center; gap:14px; font-weight:800; font-size:24px; letter-spacing:.16em; }
-.brandchip .sep { color:#a49a8a; }
-.pagenum { font-weight:800; font-size:24px; letter-spacing:.12em; color:#a49a8a; }
-.pagenum b { color:#161513; }
+.frame { position:absolute; inset:0; padding:100px 88px; display:flex; flex-direction:column; justify-content:center; }
 
-.botbar { position:absolute; bottom:64px; left:88px; right:88px; display:flex; align-items:center; justify-content:space-between; }
-.dots { display:flex; gap:10px; align-items:center; }
-.dots span { width:12px; height:12px; border-radius:6px; background:#d8d0c2; }
-.dots span.on { width:40px; background:#FC4C02; }
-.swipe { font-weight:800; font-size:24px; letter-spacing:.1em; display:flex; align-items:center; gap:12px; }
 
 .kicker { display:inline-flex; align-items:center; gap:14px; font-weight:800; font-size:26px; letter-spacing:.2em; color:#FC4C02; margin-bottom:34px; }
 .kicker .bar { display:inline-block; width:52px; height:8px; background:#FC4C02; border-radius:4px; }
@@ -103,7 +92,7 @@ h1.display { font-family:'Anton', sans-serif; font-weight:400; text-transform:up
 .tile.claude { background:#161513; box-shadow:0 24px 48px rgba(22,21,19,.28); }
 
 /* ---------- Slide 1 ---------- */
-.s1 .frame { align-items:center; text-align:center; padding-top:170px; }
+.s1 .frame { align-items:center; text-align:center; }
 .s1 .logos { display:flex; align-items:center; gap:56px; margin-bottom:88px; }
 .s1 .x { font-family:'Anton'; font-size:72px; color:#a49a8a; }
 .s1 h1 { font-size:116px; max-width:900px; }
@@ -149,9 +138,6 @@ h1.display { font-family:'Anton', sans-serif; font-weight:400; text-transform:up
 
 /* ---------- Slide 6 : dark reveal ---------- */
 .s6 { background:#161513; color:#F4F0E8; }
-.s6 .pagenum b { color:#F4F0E8; } .s6 .pagenum, .s6 .brandchip .sep { color:#6E675C; }
-.s6 .dots span { background:#3d3a34; } .s6 .dots span.on { background:#FC4C02; }
-.s6 .frame { justify-content:center; }
 .s6 .bigquote { font-family:'Anton'; font-size:200px; color:#FC4C02; line-height:.6; margin-bottom:8px; }
 .s6 .lead { font-weight:600; font-size:34px; color:#b0a898; margin-bottom:38px; }
 .s6 .quote { font-size:62px; line-height:1.25; color:#fff; max-width:880px; }
@@ -175,10 +161,7 @@ h1.display { font-family:'Anton', sans-serif; font-weight:400; text-transform:up
 
 /* ---------- Slide 9 : CTA ---------- */
 .s9 { background:#FC4C02; color:#fff; }
-.s9 .brandchip, .s9 .pagenum b { color:#fff; }
-.s9 .brandchip .sep, .s9 .pagenum { color:rgba(255,255,255,.55); }
-.s9 .dots span { background:rgba(255,255,255,.35); } .s9 .dots span.on { background:#fff; }
-.s9 .frame { align-items:center; text-align:center; justify-content:center; }
+.s9 .frame { align-items:center; text-align:center; }
 .s9 h1 { font-size:104px; max-width:880px; color:#fff; }
 .s9 .ctacard { margin-top:64px; background:#fff; color:#161513; border-radius:32px; padding:48px 56px; width:904px; box-shadow:0 30px 60px rgba(0,0,0,.18); }
 .s9 .ctacard .row { display:flex; align-items:center; gap:30px; text-align:left; }
@@ -191,10 +174,6 @@ h1.display { font-family:'Anton', sans-serif; font-weight:400; text-transform:up
 
 <!-- ======================= SLIDE 1 — HOOK ======================= -->
 <div class="slide s1" data-canvas-width="1080" data-canvas-height="1350">
-  <div class="topbar">
-    <div class="brandchip">STRAVA <span class="sep">×</span> CLAUDE</div>
-    <div class="pagenum"><b>01</b> / 09</div>
-  </div>
   <div class="frame">
     <div class="logos">
       <div class="tile strava" style="width:190px;height:190px;">
@@ -202,37 +181,16 @@ h1.display { font-family:'Anton', sans-serif; font-weight:400; text-transform:up
       </div>
       <div class="x">×</div>
       <div class="tile claude" style="width:190px;height:190px;">
-        <svg width="112" height="112" viewBox="0 0 100 100">
-          <g stroke="#D97757" stroke-width="10" stroke-linecap="round">
-            <line x1="50" y1="50" x2="50" y2="9"/>
-            <line x1="50" y1="50" x2="76" y2="19" transform="rotate(8 50 50)"/>
-            <line x1="50" y1="50" x2="88" y2="42"/>
-            <line x1="50" y1="50" x2="84" y2="68"/>
-            <line x1="50" y1="50" x2="63" y2="88"/>
-            <line x1="50" y1="50" x2="38" y2="90"/>
-            <line x1="50" y1="50" x2="16" y2="76"/>
-            <line x1="50" y1="50" x2="10" y2="52"/>
-            <line x1="50" y1="50" x2="17" y2="26"/>
-            <line x1="50" y1="50" x2="34" y2="12"/>
-          </g>
-        </svg>
+        <svg width="118" height="118" viewBox="0 0 24 24" fill="#D97757"><path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></svg>
       </div>
     </div>
     <h1 class="display">J’ai donné mes données <span class="orange">Strava</span> à <span class="terra">Claude</span></h1>
     <p class="sub serif">Il m’a créé un vrai plan d’entraînement personnalisé.</p>
   </div>
-  <div class="botbar">
-    <div class="dots"><span class="on"></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="swipe">GLISSE <svg width="34" height="24" viewBox="0 0 34 24" fill="none"><path d="M2 12h28m0 0l-9-9m9 9l-9 9" stroke="#161513" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-  </div>
 </div>
 
 <!-- ======================= SLIDE 2 — LE PROBLÈME ======================= -->
 <div class="slide s2" data-canvas-width="1080" data-canvas-height="1350">
-  <div class="topbar">
-    <div class="brandchip">STRAVA <span class="sep">×</span> CLAUDE</div>
-    <div class="pagenum"><b>02</b> / 09</div>
-  </div>
   <div class="frame">
     <div><span class="kicker"><span class="bar"></span>LE PROBLÈME</span></div>
     <h1 class="display" style="font-size:84px; margin-bottom:44px;">Strava sait <span class="orange">tout</span> de toi…</h1>
@@ -246,20 +204,11 @@ h1.display { font-family:'Anton', sans-serif; font-weight:400; text-transform:up
     </div>
     <p class="punch"><span class="serif">…mais il ne te dit pas clairement</span><br><b class="hl">quoi changer pour progresser.</b></p>
   </div>
-  <div class="botbar">
-    <div class="dots"><span></span><span class="on"></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="swipe">GLISSE <svg width="34" height="24" viewBox="0 0 34 24" fill="none"><path d="M2 12h28m0 0l-9-9m9 9l-9 9" stroke="#161513" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-  </div>
 </div>
 
 <!-- ======================= SLIDE 3 — CE QUE J'AI ENVOYÉ ======================= -->
 <div class="slide s3" data-canvas-width="1080" data-canvas-height="1350">
-  <div class="topbar">
-    <div class="brandchip">STRAVA <span class="sep">×</span> CLAUDE</div>
-    <div class="pagenum"><b>03</b> / 09</div>
-  </div>
   <div class="frame">
-    <div><span class="kicker"><span class="bar"></span>ÉTAPE 1</span></div>
     <h1 class="display" style="font-size:80px; margin-bottom:48px;">Ce que j’ai donné à Claude</h1>
     <div class="checks">
       <div class="check"><span class="bx"><svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M4 12.5l5.5 5.5L20 7" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Mes dernières courses</div>
@@ -271,46 +220,28 @@ h1.display { font-family:'Anton', sans-serif; font-weight:400; text-transform:up
     </div>
     <div class="notebox">💡 <b>Le plus simple :</b> depuis juin, Strava propose un <b>connecteur officiel pour Claude</b> (abonnés). Sinon, copie-colle simplement tes stats — ça marche aussi.</div>
   </div>
-  <div class="botbar">
-    <div class="dots"><span></span><span></span><span class="on"></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="swipe">GLISSE <svg width="34" height="24" viewBox="0 0 34 24" fill="none"><path d="M2 12h28m0 0l-9-9m9 9l-9 9" stroke="#161513" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-  </div>
 </div>
 
 <!-- ======================= SLIDE 4 — LE PROMPT ======================= -->
 <div class="slide s4" data-canvas-width="1080" data-canvas-height="1350">
-  <div class="topbar">
-    <div class="brandchip">STRAVA <span class="sep">×</span> CLAUDE</div>
-    <div class="pagenum"><b>04</b> / 09</div>
-  </div>
   <div class="frame">
-    <div><span class="kicker"><span class="bar"></span>ÉTAPE 2</span></div>
     <h1 class="display" style="font-size:70px; margin-bottom:18px;">Je lui ai demandé d’agir comme un <span class="terra">coach running</span></h1>
     <p class="muted" style="font-size:29px; font-weight:600; margin-bottom:34px;">Extrait simplifié du prompt&nbsp;:</p>
     <div class="chat">
       <div class="rolehint">MOI <svg width="26" height="26" viewBox="0 0 24 24" fill="#8a8172"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7z"/></svg></div>
       <div class="msg user"><span class="serif">«&nbsp;Agis comme un coach de course à pied. Analyse mes dernières activités Strava, repère mes points faibles et crée-moi un programme adapté à mon niveau et à mon objectif.&nbsp;»</span></div>
       <div class="claude-row">
-        <div class="avatar"><svg width="44" height="44" viewBox="0 0 100 100"><g stroke="#D97757" stroke-width="11" stroke-linecap="round"><line x1="50" y1="50" x2="50" y2="9"/><line x1="50" y1="50" x2="88" y2="42"/><line x1="50" y1="50" x2="84" y2="68"/><line x1="50" y1="50" x2="63" y2="88"/><line x1="50" y1="50" x2="38" y2="90"/><line x1="50" y1="50" x2="16" y2="76"/><line x1="50" y1="50" x2="10" y2="52"/><line x1="50" y1="50" x2="17" y2="26"/><line x1="50" y1="50" x2="34" y2="12"/><line x1="50" y1="50" x2="76" y2="19"/></g></svg></div>
+        <div class="avatar"><svg width="46" height="46" viewBox="0 0 24 24" fill="#D97757"><path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></svg></div>
         <div class="msg claude">Claude analyse tes 3 derniers mois d’entraînement <span class="typing"><i></i><i></i><i></i></span></div>
       </div>
     </div>
     <div class="notebox" style="margin-top:38px;">🔒 <b>Le prompt complet</b> est trop long pour une slide → <b>récupère-le à la slide 9.</b></div>
   </div>
-  <div class="botbar">
-    <div class="dots"><span></span><span></span><span></span><span class="on"></span><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="swipe">GLISSE <svg width="34" height="24" viewBox="0 0 34 24" fill="none"><path d="M2 12h28m0 0l-9-9m9 9l-9 9" stroke="#161513" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-  </div>
 </div>
 
 <!-- ======================= SLIDE 5 — CE QU'IL A ANALYSÉ ======================= -->
 <div class="slide s5" data-canvas-width="1080" data-canvas-height="1350">
-  <div class="topbar">
-    <div class="brandchip">STRAVA <span class="sep">×</span> CLAUDE</div>
-    <div class="pagenum"><b>05</b> / 09</div>
-  </div>
   <div class="frame">
-    <div><span class="kicker"><span class="bar"></span>ÉTAPE 3</span></div>
     <h1 class="display" style="font-size:80px; margin-bottom:34px;">Ce que Claude a repéré</h1>
     <div class="findings">
       <div class="finding"><div class="num">01</div><div class="tx">Les séances où j’allais <b>trop vite</b><small>mes footings « faciles » n’avaient de facile que le nom</small></div></div>
@@ -320,36 +251,20 @@ h1.display { font-family:'Anton', sans-serif; font-weight:400; text-transform:up
       <div class="finding"><div class="num">05</div><div class="tx">Les <b>déséquilibres</b> dans mes entraînements<small>trop d’intensité, pas assez de volume facile</small></div></div>
     </div>
   </div>
-  <div class="botbar">
-    <div class="dots"><span></span><span></span><span></span><span></span><span class="on"></span><span></span><span></span><span></span><span></span></div>
-    <div class="swipe">GLISSE <svg width="34" height="24" viewBox="0 0 34 24" fill="none"><path d="M2 12h28m0 0l-9-9m9 9l-9 9" stroke="#161513" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-  </div>
 </div>
 
 <!-- ======================= SLIDE 6 — LE DÉCLIC (dark) ======================= -->
 <div class="slide s6" data-canvas-width="1080" data-canvas-height="1350">
-  <div class="topbar">
-    <div class="brandchip" style="color:#F4F0E8;">STRAVA <span class="sep">×</span> CLAUDE</div>
-    <div class="pagenum"><b>06</b> / 09</div>
-  </div>
   <div class="frame">
     <div class="bigquote">“</div>
     <p class="lead">Le problème que je n’avais <u>pas remarqué</u>&nbsp;:</p>
     <p class="quote serif">Je faisais presque toutes mes sorties <span class="orange">à la même intensité</span> — sans vraie séance facile.</p>
     <p class="after">Résultat&nbsp;: je me fatiguais sans progresser. Les coachs appellent ça courir dans la <b>« zone grise »</b> — trop vite pour récupérer, trop lentement pour progresser.</p>
   </div>
-  <div class="botbar">
-    <div class="dots"><span></span><span></span><span></span><span></span><span></span><span class="on"></span><span></span><span></span><span></span></div>
-    <div class="swipe" style="color:#F4F0E8;">GLISSE <svg width="34" height="24" viewBox="0 0 34 24" fill="none"><path d="M2 12h28m0 0l-9-9m9 9l-9 9" stroke="#F4F0E8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-  </div>
 </div>
 
 <!-- ======================= SLIDE 7 — LE PROGRAMME ======================= -->
 <div class="slide s7" data-canvas-width="1080" data-canvas-height="1350">
-  <div class="topbar">
-    <div class="brandchip">STRAVA <span class="sep">×</span> CLAUDE</div>
-    <div class="pagenum"><b>07</b> / 09</div>
-  </div>
   <div class="frame">
     <div><span class="kicker"><span class="bar"></span>LE RÉSULTAT</span></div>
     <h1 class="display" style="font-size:78px; margin-bottom:32px;">Il m’a construit ma semaine type</h1>
@@ -361,18 +276,10 @@ h1.display { font-family:'Anton', sans-serif; font-weight:400; text-transform:up
     </div>
     <div class="notebox" style="margin-top:30px; font-size:27px; padding:26px 34px;">🎯 Adapté à <b>mon niveau</b>, <b>mon emploi du temps</b> et <b>mon objectif</b> — ajusté chaque semaine selon mes retours.</div>
   </div>
-  <div class="botbar">
-    <div class="dots"><span></span><span></span><span></span><span></span><span></span><span></span><span class="on"></span><span></span><span></span></div>
-    <div class="swipe">GLISSE <svg width="34" height="24" viewBox="0 0 34 24" fill="none"><path d="M2 12h28m0 0l-9-9m9 9l-9 9" stroke="#161513" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-  </div>
 </div>
 
 <!-- ======================= SLIDE 8 — LES LIMITES ======================= -->
 <div class="slide s8" data-canvas-width="1080" data-canvas-height="1350">
-  <div class="topbar">
-    <div class="brandchip">STRAVA <span class="sep">×</span> CLAUDE</div>
-    <div class="pagenum"><b>08</b> / 09</div>
-  </div>
   <div class="frame">
     <div><span class="kicker tc"><span class="bar"></span>SOYONS HONNÊTES</span></div>
     <h1 class="display" style="font-size:76px;">Est-ce que ça remplace un vrai coach&nbsp;?</h1>
@@ -386,18 +293,10 @@ h1.display { font-family:'Anton', sans-serif; font-weight:400; text-transform:up
       <div class="check" style="font-size:33px;"><span class="bx dark"><svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M4 12.5l5.5 5.5L20 7" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Créer une première base de programme</div>
     </div>
   </div>
-  <div class="botbar">
-    <div class="dots"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span class="on"></span><span></span></div>
-    <div class="swipe">GLISSE <svg width="34" height="24" viewBox="0 0 34 24" fill="none"><path d="M2 12h28m0 0l-9-9m9 9l-9 9" stroke="#161513" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-  </div>
 </div>
 
 <!-- ======================= SLIDE 9 — CTA ======================= -->
 <div class="slide s9" data-canvas-width="1080" data-canvas-height="1350">
-  <div class="topbar">
-    <div class="brandchip">STRAVA <span class="sep">×</span> CLAUDE</div>
-    <div class="pagenum"><b>09</b> / 09</div>
-  </div>
   <div class="frame">
     <h1 class="display">Tu veux analyser <span style="color:#161513;">tes</span> données Strava&nbsp;?</h1>
     <div class="ctacard">
@@ -410,10 +309,6 @@ h1.display { font-family:'Anton', sans-serif; font-weight:400; text-transform:up
       <svg width="40" height="40" viewBox="0 0 24 24" fill="none" style="flex:0 0 auto;"><path d="M6 3h12a1 1 0 011 1v17l-7-4.5L5 21V4a1 1 0 011-1z" stroke="#fff" stroke-width="2.2" stroke-linejoin="round"/></svg>
       Sauvegarde ce post pour le tester après ta prochaine course.
     </div>
-  </div>
-  <div class="botbar">
-    <div class="dots"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span class="on"></span></div>
-    <div class="swipe" style="color:#fff;">FIN ✦</div>
   </div>
 </div>
 

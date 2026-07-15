@@ -61,4 +61,4 @@ node tools/render.js slides   # depuis le dossier carousel/
 
 - Palette : ivoire `#F4F0E8` (fond Claude), orange Strava `#FC4C02`, terracotta Claude `#C15F3C`, encre `#161513`
 - Typo : **Anton** (titres), **Inter** (texte), **Lora italique** (citations) — embarquées en base64 dans le HTML
-- Logos redessinés en SVG inline (aucune ressource externe)
+- Logos officiels Strava et Claude (tracés vectoriels Simple Icons) embarqués en SVG inline — aucune ressource externe
